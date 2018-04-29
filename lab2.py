@@ -24,9 +24,5 @@ def abrirArchivo():
 	return data,rate
 
 data,rate = abrirArchivo()
-fs = rate
-f, t, Sxx = signal.spectrogram(data,fs)
-plt.pcolormesh(t, f, Sxx)
-plt.ylabel('Frequency [Hz]')
-plt.xlabel('Time [sec]')
+Pxx, freqs, bins, im = plt.specgram(data,rate)
 plt.show()
