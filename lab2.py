@@ -22,7 +22,7 @@ def abrirArchivo():
 		data = info[:,dimension-1]
 		perfect = 0
 	return data,rate
-
+NFFT = 1024
 data,rate = abrirArchivo()
-Pxx, freqs, bins, im = plt.specgram(data,rate)
+Pxx, freqs, bins, im = plt.specgram(data,NFFT,Fs=rate)
 plt.show()
