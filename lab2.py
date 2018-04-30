@@ -59,16 +59,20 @@ graficar("sampletitle","samplex","sampley",t,data)
 plotSpecgram(data,rate)
 nyq_rate = rate / 2
 cutoff_hz=1000
+cutoff_hz_sup=2000
 numtaps=1001
 
 fircoef1_high = signal.firwin(numtaps,cutoff_hz/nyq_rate, pass_zero=False)
 
 fircoef1_low = signal.firwin(numtaps,cutoff_hz/nyq_rate)
 
-filtered_x = lfilter(fircoef1,1.0,data)
+fircoef1_band = signal.firwin(numtaps,cutoff = [cutoff_hz/nyq_rate, cutoff_hz_sup/nyq_rate])
 
-#plotSpecgram(filtered_x,rate)
 
-#graficar("sampletitle","samplex","sampley",t,filtered_x)
+filtered_x = lfilter(fircoef1_band,1.0,data)
+
+plotSpecgram(filtered_x,rate)
+
+graficar("sampletitle","samplex","sampley",t,filtered_x)
 
 write("salida.wav",rate,filtered_x)
