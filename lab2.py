@@ -32,18 +32,43 @@ def fourier(data,rate):
 	frq=fftshift(frq)
 	return Tdata,frq
 
+def graficar(title,xlabel,ylabel,X,Y):
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.plot(X, Y)
+    print("Mostrando grafico")
+    plt.show()
+
+def plotSpecgram(data,rate):
+	NFFT = 1024
+	Pxx, freqs, bins, im = plt.specgram(data,NFFT,Fs=rate)
+	plt.show()
 
 
-
-NFFT = 1024
 data,rate = abrirArchivo()
-"""Pxx, freqs, bins, im = plt.specgram(data,NFFT,Fs=rate)
-plt.show()"""
+timp = len(data)/rate
+t=linspace(0,timp,len(data))
+
+
+Tdata,frq = fourier(data,rate)
+
+graficar("sampletitle","samplex","sampley",t,data)
+
+
+plotSpecgram(data,rate)
 nyq_rate = rate / 2
 cutoff_hz=1000
 numtaps=1001
-fircoef1 = signal.firwin(numtaps,cutoff_hz/nyq_rate)
-Tdata = fourier(data,rate)
-tstart = time.time()
-conv_result = sig_convolve(Tdata, fircoef1[np.newaxis, :], mode='valid')
-conv_time.append(time.time() - tstart)
+
+fircoef1_high = signal.firwin(numtaps,cutoff_hz/nyq_rate, pass_zero=False)
+
+fircoef1_low = signal.firwin(numtaps,cutoff_hz/nyq_rate)
+
+filtered_x = lfilter(fircoef1,1.0,data)
+
+#plotSpecgram(filtered_x,rate)
+
+#graficar("sampletitle","samplex","sampley",t,filtered_x)
+
+write("salida.wav",rate,filtered_x)
